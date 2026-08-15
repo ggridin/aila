@@ -1,0 +1,79 @@
+worker: mic
+role: sensor
+device_service: audio-input
+backend:
+  kind: model
+  placement: local
+  model: whisper-large-v3-turbo-q5
+sampling:
+  vad: true
+  max_segment_seconds: 15
+  source:
+    kind: sounddevice
+    device: default
+    sample_rate_hz: 16000
+    channels: 1
+    dtype: int16
+  pipeline:
+    frame_ms: 32
+    aec:
+      enabled: false
+      status: hook-only
+      mode: playback-reference
+      reference_state_path: ~/.hermes/aila-body/state/speaker-playback.json
+    vad:
+      model: silero-vad-v6-onnx
+      enabled: true
+      status: python-package
+      runtime: silero-vad
+      source: https://github.com/snakers4/silero-vad
+    denoise:
+      model: rnnoise
+      enabled: false
+      status: source-only
+      source: https://github.com/GregorR/rnnoise-models
+    stt:
+      model: whisper-large-v3-turbo-q5
+      enabled: true
+      status: configured
+      # whisper.cpp whisper-server (OpenAI-compatible /inference endpoint).
+      # Point at a LAN/eGPU host later without code changes.
+      endpoint: http://127.0.0.1:8082/inference
+      language: auto
+      timeout_seconds: 30
+      model_path: ~/.hermes/aila-body/models/sensory/audio/whisper-large-v3-turbo-q5_k.gguf
+      required_before_enable: true
+    audio_events:
+      model: yamnet
+      enabled: false
+      status: source-only
+      source: https://www.kaggle.com/models/google/yamnet/tfLite/classification-tflite/1
+    speaker_embedding:
+      model: speechbrain-ecapa-tdnn
+      enabled: true
+      status: python-package
+      runtime: speechbrain
+    diarization:
+      model: pyannote-community-1
+      enabled: true
+      status: python-package-token-gated
+      runtime: pyannote.audio
+  echo_filter:
+    enabled: true
+    speaker_state_path: ~/.hermes/aila-body/state/speaker-playback.json
+    mode: transcript-similarity
+    similarity_threshold: 0.82
+    keep_barge_in: true
+    playback_tail_ms: 750
+emits: [speech.segment]
+verbs: []
+requires:
+  os: [portaudio19-dev, libsndfile1]
+  python: [sounddevice, torch, torchaudio, onnxruntime, silero-vad, speechbrain, pyannote.audio]
+  models:
+    - whisper-large-v3-turbo-q5
+    - silero-vad-v6-onnx
+    - rnnoise
+    - yamnet
+    - speechbrain-ecapa-tdnn
+    - pyannote-community-1

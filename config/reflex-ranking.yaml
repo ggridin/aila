@@ -1,0 +1,43 @@
+# AILA reflex ranking rules (v2)
+#
+# Rules are evaluated top-to-bottom; the FIRST matching rule wins. Each rule may
+# constrain any of: worker, kind, severity. Omitted fields act as wildcards.
+# `worker`/`kind` are opaque strings, so future sources (e.g. telegram/email)
+# can be ranked here without code changes. When no rule matches,
+# `default_priority` applies.
+#
+# Priorities: P0/P1 = immediate (v3), P2 = inject/imperative, P3 = inject/soft,
+# P4 = session-start info (v3), P5 = storage only. v2 actively routes P2/P3/P5.
+
+default_priority: P5
+
+rules:
+  # Severity-driven escalation (source-agnostic, checked first).
+  - severity: alert
+    priority: P2
+  - severity: warning
+    priority: P3
+
+  # Spoken input directed at the agent.
+  - worker: mic
+    kind: speech.segment
+    priority: P3
+
+  # Scene perception — soft recommendations.
+  - worker: camera
+    kind: scene.caption
+    priority: P5
+  - worker: camera
+    kind: scene.motion
+    priority: P3
+
+  # Filesystem activity — notable but optional.
+  - worker: filesystem
+    kind: file.created
+    priority: P5
+  - worker: filesystem
+    kind: file.changed
+    priority: P5
+  - worker: filesystem
+    kind: file.deleted
+    priority: P5

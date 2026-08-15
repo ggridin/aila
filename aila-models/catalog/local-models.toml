@@ -1,0 +1,118 @@
+[llama_cpp]
+repo = "https://github.com/ggml-org/llama.cpp.git"
+root = "~/.local/src/llama.cpp"
+build_dir = "~/.local/src/llama.cpp/build-cuda"
+bin_dir = "~/.local/bin"
+server_bin = "~/.local/bin/llama-server"
+cuda = true
+cuda_arch = "75"
+
+[models]
+root = "~/.hermes/aila-body/models"
+
+[models.chat]
+repo = "unsloth/Qwen3.5-9B-GGUF"
+file = ""
+quant = "Q5_K_M"
+alias = "Qwen3.5-9B"
+
+[models.embeddings]
+repo = "ggml-org/Nomic-Embed-Text-V2-GGUF"
+file = ""
+quant = ""
+
+[models.vision]
+repo = "ggml-org/Qwen2.5-VL-3B-Instruct-GGUF"
+file = "Qwen2.5-VL-3B-Instruct-Q4_K_M.gguf"
+mmproj = "mmproj-Qwen2.5-VL-3B-Instruct-f16.gguf"
+quant = ""
+alias = "Qwen2.5-VL-3B"
+
+[service.chat]
+install = true
+host = "127.0.0.1"
+port = 8080
+ctx_size = 131072
+threads = ""
+gpu_layers = "99"
+extra_args = ["--flash-attn", "on", "--cache-type-k", "q8_0", "--cache-type-v", "q8_0", "--parallel", "1"]
+systemd_user_dir = "~/.config/systemd/user"
+name = "aila-llama-chat.service"
+
+[service.vision]
+install = true
+host = "127.0.0.1"
+port = 8081
+ctx_size = 8192
+threads = ""
+gpu_layers = "99"
+extra_args = ["--flash-attn", "on"]
+systemd_user_dir = "~/.config/systemd/user"
+name = "aila-llama-vision.service"
+
+[whisper_cpp]
+repo = "https://github.com/ggml-org/whisper.cpp.git"
+root = "~/.local/src/whisper.cpp"
+build_dir = "~/.local/src/whisper.cpp/build-cpu"
+bin_dir = "~/.local/bin"
+server_bin = "~/.local/bin/whisper-server"
+cuda = false
+cuda_arch = "75"
+
+[service.stt]
+install = true
+host = "127.0.0.1"
+port = 8082
+# Whisper GGUF installed by [sensory.assets.whisper_large_v3_turbo_q5].
+model = "~/.hermes/aila-body/models/sensory/audio/whisper-large-v3-turbo-q5_k.gguf"
+threads = ""
+extra_args = ["--convert"]
+systemd_user_dir = "~/.config/systemd/user"
+name = "aila-whisper.service"
+
+[sensory]
+install = true
+install_python = true
+model_root = "~/.hermes/aila-body/models/sensory"
+venv = "~/.hermes/aila-body/models/sensory/venv"
+python_packages = [
+	"git+https://github.com/snakers4/silero-vad.git",
+  "onnxruntime",
+  "opencv-python-headless",
+  "speechbrain",
+  "pyannote.audio",
+  "torch",
+  "torchaudio",
+]
+
+[sensory.assets.silero_vad_v6_onnx]
+name = "Silero VAD v6 ONNX"
+url = ""
+target = "audio/silero-vad-v6.onnx"
+install = "python-package"
+
+[sensory.assets.rnnoise]
+name = "RNNoise"
+url = ""
+target = "audio/rnnoise.model"
+
+[sensory.assets.whisper_large_v3_turbo_q5]
+name = "Whisper large-v3-turbo Q5"
+url = "https://huggingface.co/oxide-lab/whisper-large-v3-turbo-GGUF/resolve/main/whisper.cpp/whisper-large-v3-turbo-q5_k.gguf?download=true"
+target = "audio/whisper-large-v3-turbo-q5_k.gguf"
+
+[sensory.assets.yamnet]
+name = "YAMNet"
+url = ""
+target = "audio/yamnet"
+
+[sensory.assets.speechbrain_ecapa_tdnn]
+name = "SpeechBrain ECAPA-TDNN"
+url = ""
+target = "audio/speechbrain-ecapa-tdnn"
+
+[sensory.assets.pyannote_community_1]
+name = "pyannote Community-1"
+url = ""
+target = "audio/pyannote-community-1"
+

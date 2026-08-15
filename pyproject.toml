@@ -1,0 +1,35 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "aila"
+version = "0.1.0"
+description = "AI-living-on-laptop core package."
+requires-python = ">=3.11"
+dependencies = [
+    "httpx",
+    "pydantic>=2",
+    "pyyaml",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest",
+    "watchdog",
+]
+
+[project.scripts]
+aila-contracts = "aila.contracts.manifest:main"
+aila-worker = "aila.workers.cli:main"
+aila-body = "aila.body.dispatcher:main"
+aila-reflex-ingest = "aila.reflex.service:main"
+
+[tool.setuptools.packages.find]
+include = ["aila*"]
+
+[tool.setuptools.package-data]
+aila = ["py.typed"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

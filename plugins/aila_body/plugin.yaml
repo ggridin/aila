@@ -1,0 +1,13 @@
+name: aila-body
+version: 0.1.0
+description: "Expose AILA body worker verbs and read-only queue/digest tools from ~/.hermes/aila-body/contracts/manifest.json."
+author: AILA
+provides_tools:
+  - aila_body_manifest
+  - aila_body_queue_status
+  - aila_body_queue_peek
+  - aila_body_digest_preview
+  - aila_camera_snapshot
+  - aila_speaker_speak
+  - aila_display_render
+  - aila_display_clear

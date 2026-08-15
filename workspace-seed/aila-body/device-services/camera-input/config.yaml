@@ -1,0 +1,13 @@
+service: camera-input
+kind: camera
+consumer: camera
+device: /dev/video0
+capture:
+  width: 640
+  height: 480
+  fps: 5
+  format: mjpeg
+requires:
+  os: [v4l-utils, libgl1]
+  python: []
+  models: []

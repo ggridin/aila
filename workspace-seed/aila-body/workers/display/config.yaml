@@ -1,0 +1,14 @@
+worker: display
+role: effector
+backend:
+  kind: deterministic
+  placement: local
+sampling:
+  target: framebuffer
+  default_region: full
+emits: []
+verbs: [render, clear]
+requires:
+  os: [xvfb]
+  python: []
+  models: []

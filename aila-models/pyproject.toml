@@ -1,0 +1,24 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "aila-models"
+version = "0.1.0"
+description = "AILA local model provisioning: LLM/VLM/STT catalog and installer."
+requires-python = ">=3.11"
+dependencies = []
+
+[project.optional-dependencies]
+dev = [
+	"pytest",
+]
+
+[project.scripts]
+aila-local-models = "aila_models.local_models:main"
+
+[tool.setuptools.packages.find]
+include = ["aila_models*"]
+
+[tool.setuptools.package-data]
+aila_models = ["../catalog/local-models.toml"]

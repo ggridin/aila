@@ -1,0 +1,28 @@
+# Normalise line endings in the repository to LF.
+#
+# Everything here is deployed to a Linux host: shell scripts are run over SSH,
+# systemd units are installed under ~/.config/systemd/user, and YAML configs
+# are read by the workers. With core.autocrlf=true on Windows and no rules,
+# git rewrites these to CRLF on checkout, which breaks a shebang line as
+# "/bin/bash^M: bad interpreter" once the file reaches the host.
+* text=auto eol=lf
+
+# Explicit for the files where CRLF is fatal rather than merely untidy.
+*.sh text eol=lf
+*.bash text eol=lf
+*.service text eol=lf
+*.timer text eol=lf
+*.yaml text eol=lf
+*.yml text eol=lf
+*.toml text eol=lf
+*.py text eol=lf
+
+# PowerShell runs on Windows; keep it CRLF.
+*.ps1 text eol=crlf
+
+# Never touch binaries.
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gguf binary
+*.onnx binary

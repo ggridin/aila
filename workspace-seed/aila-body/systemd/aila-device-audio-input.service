@@ -1,0 +1,14 @@
+[Unit]
+Description=AILA audio-input device service
+
+[Service]
+Type=simple
+WorkingDirectory=%h/.hermes
+ExecStart=%h/.hermes/venv/bin/python -c "from pathlib import Path; import signal; from aila.device_services import load_device_service_config; load_device_service_config(Path('%h/.hermes/aila-body/device-services/audio-input/config.yaml')); signal.pause()"
+Restart=on-failure
+RestartSec=5
+StandardOutput=append:%h/.hermes/aila-body/logs/device-audio-input.log
+StandardError=append:%h/.hermes/aila-body/logs/device-audio-input.err.log
+
+[Install]
+WantedBy=default.target

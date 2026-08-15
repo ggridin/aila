@@ -1,0 +1,46 @@
+# AILA reflex ranking rules (v2) — seeded default.
+#
+# Rules evaluate top-to-bottom; the FIRST matching rule wins. Each rule may
+# constrain any of: worker, kind, severity (omitted fields are wildcards).
+# `worker`/`kind` are opaque, so future sources (telegram/email) can be ranked
+# here with no code change. `default_priority` applies when nothing matches.
+#
+# P0/P1 = immediate (v3), P2 = inject/imperative, P3 = inject/soft,
+# P4 = session-start info (v3), P5 = storage only. v2 routes P2/P3/P5.
+
+default_priority: P5
+
+rules:
+  - severity: alert
+    priority: P2
+  - severity: warning
+    priority: P3
+  - worker: mic
+    kind: speech.segment
+    priority: P2
+  - worker: camera
+    kind: scene.caption
+    priority: P3
+  - worker: camera
+    kind: scene.motion
+    priority: P3
+  - worker: filesystem
+    kind: file.created
+    priority: P3
+  - worker: filesystem
+    kind: file.changed
+    priority: P3
+  - worker: filesystem
+    kind: file.deleted
+    priority: P3
+
+# Ingest filter thresholds: drop low-value observations before ranking.
+filter:
+  # Discard camera scene.motion (and low-motion frames) below this level.
+  min_motion_level: 0.15
+
+# Dedup collapse behaviour.
+dedup:
+  # 'caption' keys scene.caption on the full VLM description text (identical
+  # descriptions of a static scene collapse; different scenes stay separate).
+  caption_key: caption

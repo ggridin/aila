@@ -1,0 +1,59 @@
+# Visual Studio / IDE
+.vs/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# Build outputs
+bin/
+obj/
+[Bb]uild/
+[Dd]ebug/
+[Rr]elease/
+x64/
+x86/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Logs / temp
+*.log
+*.tmp
+*.temp
+
+# Environment / secrets
+.env
+*.env
+!.env.example
+
+# Python / uv cache
+__pycache__/
+*.py[cod]
+.pytest_cache/
+*.egg-info/
+.venv/
+.uv-cache/
+
+# Node
+node_modules/
+
+# Local build artifacts / probes
+._probe_tmp.md
+
+# Planning, design and implementation notes live at the repo root and are kept
+# out of the published repo for now. Markdown inside subdirectories (the
+# workspace seed, plugin docs) is still tracked.
+#
+# NOTE: README.md is already tracked upstream, so this rule does not untrack
+# it -- gitignore only applies to untracked files. It stays as published until
+# it is reworked.
+/*.md
+
+# Visual Studio solution
+*.slnx
+
+# Local Copilot instructions: kept on disk, never published. Contains host
+# details (addresses, SSH user) specific to this deployment.
+.github/copilot-instructions.md

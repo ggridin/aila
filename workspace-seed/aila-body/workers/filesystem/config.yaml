@@ -1,0 +1,19 @@
+worker: filesystem
+role: sensor
+backend:
+  kind: deterministic
+  placement: local
+sampling:
+  paths:
+    - ~/projects
+    - ~/.hermes/aila-home
+  ignore:
+    - "**/.git/**"
+    - "**/__pycache__/**"
+  debounce_ms: 500
+emits: [file.changed, file.created, file.deleted]
+verbs: []
+requires:
+  os: []
+  python: [watchdog]
+  models: []

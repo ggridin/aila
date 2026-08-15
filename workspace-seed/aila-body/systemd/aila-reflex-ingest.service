@@ -1,0 +1,15 @@
+[Unit]
+Description=AILA reflex ingest service
+After=network.target
+
+[Service]
+Type=simple
+WorkingDirectory=%h/.hermes
+ExecStart=%h/.hermes/venv/bin/aila-reflex-ingest --queue-dir %h/.hermes/aila-body/queue --store-dir %h/.hermes/aila-body/reflex --rules %h/.hermes/aila-body/reflex-ranking.yaml
+Restart=on-failure
+RestartSec=5
+StandardOutput=append:%h/.hermes/aila-body/logs/reflex-ingest.log
+StandardError=append:%h/.hermes/aila-body/logs/reflex-ingest.err.log
+
+[Install]
+WantedBy=default.target

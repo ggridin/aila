@@ -1,0 +1,43 @@
+worker: camera
+role: sensor
+device_service: camera-input
+backend:
+  kind: model
+  placement: local
+  model: camera-vlm
+sampling:
+  frame_interval_seconds: 5
+  source:
+    kind: opencv-v4l2
+    device: /dev/video0
+    width: 640
+    height: 480
+    fps: 5
+  pipeline:
+    motion:
+      method: opencv-frame-differencing
+      enabled: true
+      threshold: 25
+      region: frame
+  vision:
+    # Vision-language captioning backend (OpenAI-compatible endpoint).
+    # Point endpoint at a LAN/eGPU host later without code changes.
+    endpoint: http://127.0.0.1:8081/v1
+    model: Qwen2.5-VL-3B
+    max_tokens: 64
+    timeout_seconds: 30
+    downscale_width: 640
+    # Look on motion, throttled to ~min_interval_seconds; periodic keepalive.
+    min_interval_seconds: 12
+    keepalive_seconds: 120
+    motion_trigger_level: 0.12
+    dark_mean_min: 20
+    # Perceptual pre-dedup: skip the VLM (reuse the last caption) when fewer
+    # than this fraction of pixels changed since the last described frame.
+    scene_dedup_level: 0.02
+emits: [scene.caption, scene.motion]
+verbs: [snapshot]
+requires:
+  os: [v4l-utils, libgl1]
+  python: [opencv-python-headless]
+  models: [qwen2.5-vl-3b]

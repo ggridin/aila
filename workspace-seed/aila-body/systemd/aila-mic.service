@@ -1,0 +1,17 @@
+[Unit]
+Description=AILA mic worker
+Requires=aila-device-audio-input.service
+After=aila-device-audio-input.service
+
+[Service]
+Type=simple
+WorkingDirectory=%h/.hermes
+EnvironmentFile=-%h/.hermes/aila-body/workers/mic/.env
+ExecStart=%h/.hermes/venv/bin/aila-worker mic --config %h/.hermes/aila-body/workers/mic/config.yaml --registry %h/.hermes/config.yaml --queue-dir %h/.hermes/aila-body/queue --device-service-config %h/.hermes/aila-body/device-services/audio-input/config.yaml
+Restart=on-failure
+RestartSec=5
+StandardOutput=append:%h/.hermes/aila-body/logs/mic.log
+StandardError=append:%h/.hermes/aila-body/logs/mic.err.log
+
+[Install]
+WantedBy=default.target

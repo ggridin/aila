@@ -1,0 +1,12 @@
+service: audio-input
+kind: audio
+consumer: mic
+device: default
+capture:
+  sample_rate_hz: 16000
+  channels: 1
+  format: s16le
+requires:
+  os: [portaudio19-dev, libsndfile1]
+  python: []
+  models: []

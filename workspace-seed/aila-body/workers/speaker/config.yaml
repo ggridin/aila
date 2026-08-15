@@ -1,0 +1,32 @@
+worker: speaker
+role: effector
+backend:
+  kind: model
+  placement: local
+  model: piper-en
+sampling:
+  backend: piper-cli
+  model_path: ~/.hermes/aila-body/models/piper-en/en_US-lessac-medium.onnx
+  config_path: ~/.hermes/aila-body/models/piper-en/en_US-lessac-medium.onnx.json
+  temp_dir: ~/.hermes/aila-body/tmp/speaker
+  cleanup_audio: true
+  speaker_id: 0
+  length_scale: 1.0
+  noise_scale: 0.667
+  noise_w_scale: 0.8
+  sentence_silence: 0.2
+  volume: 1.0
+  playback:
+    backend: aplay
+    device: default
+  feedback_reference:
+    enabled: true
+    state_path: ~/.hermes/aila-body/state/speaker-playback.json
+    tail_ms: 750
+    include_text: true
+emits: []
+verbs: [speak]
+requires:
+  os: [libsndfile1, alsa-utils]
+  python: [piper-tts, onnxruntime]
+  models: [piper-en]

@@ -1,0 +1,16 @@
+version: "1.0"
+subscriptions:
+  - worker: mic
+    kind: speech.segment
+    predicate: {}
+    on_match: queue
+  - worker: camera
+    kind: scene.caption
+    predicate:
+      labels: ["person"]
+    on_match: queue
+  - worker: filesystem
+    kind: file.changed
+    predicate:
+      path~: "~/projects/**"
+    on_match: queue

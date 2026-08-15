@@ -1,0 +1,15 @@
+[Unit]
+Description=AILA speaker worker
+
+[Service]
+Type=simple
+WorkingDirectory=%h/.hermes
+EnvironmentFile=-%h/.hermes/aila-body/workers/speaker/.env
+ExecStart=%h/.hermes/venv/bin/aila-worker speaker --config %h/.hermes/aila-body/workers/speaker/config.yaml --registry %h/.hermes/config.yaml --queue-dir %h/.hermes/aila-body/queue
+Restart=on-failure
+RestartSec=5
+StandardOutput=append:%h/.hermes/aila-body/logs/speaker.log
+StandardError=append:%h/.hermes/aila-body/logs/speaker.err.log
+
+[Install]
+WantedBy=default.target

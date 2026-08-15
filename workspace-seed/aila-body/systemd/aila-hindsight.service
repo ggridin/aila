@@ -1,0 +1,20 @@
+[Unit]
+Description=AILA Hindsight embedded memory daemon
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+# `daemon start` returns once the daemon is up and responding; the daemon
+# itself keeps running in the background, hence oneshot + RemainAfterExit.
+ExecStart=%h/.hermes/hermes-agent/venv/bin/hindsight-embed -p hermes daemon start
+ExecStop=%h/.hermes/hermes-agent/venv/bin/hindsight-embed -p hermes daemon stop
+# Startup initialises embedded PostgreSQL and loads embedding models, which is
+# slow on a cold start.
+TimeoutStartSec=600
+Restart=on-failure
+RestartSec=30
+
+[Install]
+WantedBy=default.target

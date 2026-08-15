@@ -1,0 +1,43 @@
+# AILA v1 Hermes seed. Edit the model to taste after installation.
+model: openrouter/meta-llama/llama-3.3-70b-instruct:free
+
+terminal:
+  backend: local
+
+approvals:
+  mode: "off"
+
+cron:
+  enabled: true
+
+workers:
+  enabled: [mic, camera, filesystem, speaker, display]
+
+skills:
+  # Disable bundled skill categories irrelevant to an autonomous laptop-dweller.
+  # Names map to individual skills; category names below indicate their source group.
+  disabled: [
+    # apple
+    apple-notes, apple-reminders, findmy, imessage,
+    # autonomous-ai-agents
+    claude-code, codex, computer-use, hermes-agent, opencode,
+    # smart-home
+    openhue,
+  ]
+
+plugins:
+  # aila-reflex: reflex event pipeline (general plugin at ~/.hermes/plugins/aila-reflex).
+  # aila-briefing: retains each wake as an episode and injects the previous-session
+  # briefing into the next wake. Consumes the memory provider, does not register as one.
+  enabled: [aila-reflex, aila-briefing]
+
+memory:
+  distillation: true
+  session_search: true
+  semantic_knowledge: true
+  # Hindsight owns the single external memory-provider slot. It is the only
+  # component that carries context across wakes -- LCM (context.engine) merely
+  # compresses within a single session. setup-hermes.sh sets this too; keep the
+  # two in sync.
+  provider: hindsight
+

@@ -1,0 +1,9 @@
+name: aila-reflex
+version: 0.1.0
+description: AILA reflex event pipeline — injects a prioritized, deduplicated reflex-events digest into the wake and exposes on-demand event retrieval.
+author: AILA
+provides_tools:
+  - reflex_expand
+provides_hooks:
+  - pre_llm_call
+  - on_session_end

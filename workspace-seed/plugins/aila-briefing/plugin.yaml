@@ -1,0 +1,9 @@
+name: aila-briefing
+version: 0.1.0
+description: AILA wake session briefing — retains each wake as an episode at session end and injects a recency-first briefing of previous sessions into the next wake.
+author: AILA
+provides_tools:
+  - record_episode
+provides_hooks:
+  - pre_llm_call
+  - on_session_end
